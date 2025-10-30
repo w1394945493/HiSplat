@@ -1,5 +1,10 @@
 # A simple demo to validate the installation and show the effectiveness of HiSplat
+# 设置进程名
+from setproctitle import setproctitle
+setproctitle("wys")
+
 import os
+os.environ["CUDA_VISIBLE_DEVICES"] = "7"
 from pathlib import Path
 
 import hydra
@@ -39,6 +44,17 @@ with install_import_hook(
     from src.model.encoder import get_encoder
     from src.model.model_wrapper import ModelWrapper
 
+from moviepy.editor import ImageSequenceClip
+import numpy as np
+
+def save_video_with_moviepy(video, output_path, fps):
+    # 确保视频帧是 uint8 类型
+    video = np.clip(video.numpy(), 0, 255).astype(np.uint8)  # 将 PyTorch 张量转为 NumPy 数组，并确保数据类型是 uint8
+    # 将视频帧传递给 ImageSequenceClip
+    clip = ImageSequenceClip(list(video), fps=fps)
+    # 写入视频
+    clip.write_videofile(output_path, codec='libx264')  # 使用 H.264 编码
+    print(f"Video saved to {output_path}")
 
 def trajectory_fn(t, batch):
     extrinsics = interpolate_extrinsics(
@@ -215,8 +231,9 @@ def generate_video(cfg_dict: DictConfig):
     video = rearrange(video, "t c h w -> t h w c")
     fps = 24
     os.makedirs(os.path.join("demo", "output"), exist_ok=True)
-    write_video(os.path.join("demo", "output", "video.mp4"), video, fps=fps)
-    save_batch_images(example["context"]["image"][0], os.path.join("demo", "output", "context_img.png"))
+    # write_video(os.path.join("demo", "output", "video.mp4"), video, fps=fps)
+    save_video_with_moviepy(video, "demo/output/video.mp4", fps=30) # todo 保存视频
+    save_batch_images(example["context"]["image"][0], os.path.join("demo", "output", "context_img.png")) # todo 保存图片
     print(cyan(f"Saving output videos and context images to {os.path.join('demo', 'output')}."))
 
 

@@ -114,7 +114,7 @@ def render_cuda(
 
         row, col = torch.triu_indices(3, 3)
 
-        image, radii = rasterizer(
+        image, _,_,_ = rasterizer(
             means3D=gaussian_means[i].float(),
             means2D=mean_gradients.float(),
             shs=shs[i].float() if use_sh else None,
@@ -123,7 +123,7 @@ def render_cuda(
             cov3D_precomp=gaussian_covariances[i, :, row, col].float(),
         )
         all_images.append(image)
-        all_radii.append(radii)
+        # all_radii.append(radii)
     return torch.stack(all_images)
 
 

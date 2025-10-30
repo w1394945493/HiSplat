@@ -226,7 +226,10 @@ class BackbonePyramid(torch.nn.Module):
 
 
 class DinoExtractor(torch.nn.Module):
-    def __init__(self, vit_path="./checkpoints/dinov2_vitb14_pretrain.pth"):
+    def __init__(self,
+                #  vit_path="./checkpoints/dinov2_vitb14_pretrain.pth"
+                vit_path="/home/lianghao/wangyushen/data/wangyushen/Weights/hisplat/dinov2_vitb14_pretrain.pth"
+                 ):
         super(DinoExtractor, self).__init__()
         self.vit_cfg = {
             "model_type": "DINOv2-base",
@@ -234,7 +237,8 @@ class DinoExtractor(torch.nn.Module):
             "rescale": 1.0,
             "vit_ch": 768,
             "out_ch": 64,
-            "vit_path": "./checkpoints/dinov2_vitb14_pretrain.pth",
+            # "vit_path": "./checkpoints/dinov2_vitb14_pretrain.pth",
+            "vit_path": "/home/lianghao/wangyushen/data/wangyushen/Weights/hisplat/dinov2_vitb14_pretrain.pth",
             "pretrain_mvspp_path": "",
             "depth_type": ["ce", "ce", "ce", "ce"],
             "fusion_type": "cnn",
